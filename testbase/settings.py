@@ -147,5 +147,3 @@ LOGIN_REDIRECT_URL = '/home'
 
 # Redirect to login URL after logout (Default redirects to /accounts/login/)
 LOGOUT_REDIRECT_URL = '/login'
-
-
