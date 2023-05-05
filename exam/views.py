@@ -3,7 +3,6 @@ from django.shortcuts import render, redirect
 from .models import Class, Exam, Question, Option, AnswerSheet, Answer
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
 import datetime
 from datetime import date, datetime, timedelta
 from django.contrib.auth.models import User
