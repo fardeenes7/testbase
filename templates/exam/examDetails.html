@@ -10,6 +10,8 @@
                 <span> {{exam.start_time | date:"h:i A"}}</span>
             </p>
             <p class="mt-1 mb-4">Total questions: {{exam.questions.count}}</p>
+            <p class="mt-1 mb-4">Instruction File: <a class="font-bold text-gray-200 hover:text-gray-300" href="/media/{{exam.file}}" download>Download</a></p>
+            
             <button class="mt-2 bg-white text-primary px-4 py-2 font-bold rounded-lg hover:bg-gray-200"
             onclick="editexamModal()"
             >

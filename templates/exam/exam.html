@@ -5,7 +5,7 @@
     >
         <span>{{done}} of {{total}}</span>
         <h1 class="text-2xl font-bold">{{question.question}}</h1>
-        <form method="POST">
+        <form id="examForm" method="POST">
             {% csrf_token %}
             <div class="mcqfield">
                 {% for option in question.options.all %}
@@ -109,17 +109,18 @@
                     {% if done != total %}
                     <button
                         type="submit"
-                        value="next"
                         name="action"
+                        value="next"
                         class="bg-primary text-white font-bold p-2 rounded-lg px-8 hover:bg-secondary"
                     >
                         Next
                     </button>
                     {% endif %}
                     <button
-                        type="submit"
-                        value="submit"
+                        type="button"
                         name="action"
+                        value="submit"
+                        onclick="submitExam()"
                         class="bg-red-500 text-white font-bold p-2 rounded-lg px-8 hover:bg-red-400"
                     >
                         Submit
@@ -129,4 +130,15 @@
         </form>
     </div>
 </div>
+
+<script>
+    function submitExam() {
+        is_confirm = confirm(
+            "Are you sure you want to submit the exam? You can't join this exam again."
+        );
+        if (is_confirm) {
+            document.getElementById("examForm").submit();
+        }
+    }
+</script>
 {%endblock%}

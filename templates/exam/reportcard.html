@@ -28,8 +28,8 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for answer in answersheet %}
                     <tr class="border-b border-gray-400">
-                        {% for answer in answersheet %}
                         <td class="text-left pl-8">
                             {{answer.student.first_name}}
                             {{answer.student.last_name}}
@@ -57,9 +57,9 @@
                                 class="bg-primary px-8 py-2 rounded-xl text-white font-bold hover:bg-secondary"
                                 >View</a
                             >
-                            {% endfor %}
                         </td>
                     </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

@@ -15,17 +15,16 @@ from .forms import CreateuserForm
 
 def joinclass(class_code, user):
     class_obj = Class.objects.get(code=class_code)
+    if user.id == class_obj.teacher.id or user.id in class_obj.students.values_list('id', flat=True):
+        return '/home/class/'+class_obj.code
     class_obj.students.add(user)
     class_obj.save()
     return '/home/class/'+class_obj.code
 
 
 def landingPage(request):
-    print(request.get_full_path())
-    
     data = {}
     return render(request, 'landing.html', data)
-
 
 
 def registrationView(request):
@@ -43,6 +42,8 @@ def registrationView(request):
 
 def loginView(request):
     data = {}
+    if request.user.is_authenticated:
+        return redirect('/home')
     if request.method =="POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -99,8 +100,10 @@ def classView(request, class_code):
         elif request.POST.get('action') == "create_exam":
             exam_start_time = datetime.strptime(request.POST.get('exam_start_time'), '%H:%M')
             exam_end_time = datetime.strptime(request.POST.get('exam_end_time'), '%H:%M')
-            
-            exam_obj = Exam.objects.create(name=request.POST.get('exam_name'), duration= int(request.POST.get('exam_duration')), instruction=request.POST.get('exam_instruction'), date=datetime.strptime(request.POST.get('exam_date'),'%Y-%m-%d'), start_time=exam_start_time, end_time=exam_end_time, classes=Class.objects.get(code=class_code))
+            file = request.FILES.get('file')
+            print(file)
+            print(request.FILES)
+            exam_obj = Exam.objects.create(name=request.POST.get('exam_name'), duration= int(request.POST.get('exam_duration')), instruction=request.POST.get('exam_instruction'), date=datetime.strptime(request.POST.get('exam_date'),'%Y-%m-%d'), start_time=exam_start_time, end_time=exam_end_time, classes=Class.objects.get(code=class_code), file=file)
             exam_obj.save()
             return redirect('/home/exam/details/'+str(exam_obj.id))
 
@@ -114,7 +117,14 @@ def classView(request, class_code):
     teacher_status = request.user.id == classes.teacher.id
     teacher = {'status':teacher_status, 'color':{'primary': 'rose-200' if teacher_status else 'indigo-100', 'secondary': 'rose-300' if teacher_status else 'indigo-300'}}
     
-    data = {"class":classes ,"exams": exams, "archived_exams": archived_exams, "joined": joined, "teacher": teacher}
+    data = {
+        "class":classes ,
+        "exams": exams, 
+        "archived_exams": archived_exams, 
+        "joined": joined, 
+        "teacher": teacher,
+        "today": datetime.now().date()
+        }
     return render(request, 'exam/class.html', data)
 
 @login_required(login_url='/login')
@@ -127,7 +137,6 @@ def examStart(request, exam_id):
         return redirect('/home/exam/'+str(exam.id))
     started = True if exam.start_time <= datetime.now().time() and exam.date == datetime.now().date() else False
     ended = True if exam.date < datetime.now().date() or (exam.end_time <= datetime.now().time() and exam.date < datetime.now().date()) else False
-    print(started,ended)
     submitted = True if AnswerSheet.objects.filter(exam=exam_id, student=request.user.id).exists() else False
     data = {"exam": exam, "class": class_obj, "questions": questions, "started": started, "ended": ended, 'submitted': submitted}
     return render(request, 'exam/examStart.html', data)
@@ -202,7 +211,6 @@ def examView(request, exam_id):
             return redirect('/home')
     done_answers = Answer.objects.filter(answersheet=answersheet[0].id, answered=True)
     done_questions = [x for x in done_answers.values_list('question', flat=True)]
-    print(done_questions)
     for question in question_obj:
         if question.id in done_questions:
             continue

@@ -38,6 +38,7 @@ class Exam(models.Model):
     end_time = models.TimeField(default=None)
     duration = models.IntegerField(default=60, null=True, blank=True)
     instruction = models.TextField(null=True, blank=True)
+    file = models.FileField(upload_to='exam_files', null=True, blank=True)
 
     def __str__(self):
         return self.name

@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from exam.views import landingPage, loginView, logoutView, registrationView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', landingPage, name='landing'),
@@ -25,3 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', include('exam.urls'))
 ]
+
+
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
