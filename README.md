@@ -7,6 +7,13 @@ An online Exam Platform created with Django
 
 
 
+## Tech Stack
+
+**Client:** Django Templates, HTML, Tailwind CSS, Vanilla Javascript
+
+**Server:** Django, Python
+
+
 ## Run Locally
 
 Clone the project
@@ -54,5 +61,3 @@ N.B: Migrations are already done in the local sqlite database.
 ![App Screenshot](screenshots/8.png)
 ![App Screenshot](screenshots/9.png)
 ![App Screenshot](screenshots/10.png)
-
-
